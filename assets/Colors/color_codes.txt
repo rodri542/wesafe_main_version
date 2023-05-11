@@ -1,0 +1,5 @@
+511262     -Principal
+B17A50     -dorado
+761a8d     -claro
+2e0a37     -oscuro
+c19573     -dorado base
