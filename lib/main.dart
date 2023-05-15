@@ -1,8 +1,9 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:wesafe_main_version/pages/menu/Maps.dart';
+import 'package:wesafe_main_version/routes/app_routes.dart';
 import 'package:wesafe_main_version/pages/login/login_page.dart';
-import 'package:wesafe_main_version/pages/login/main_menu_page.dart';
 import 'package:wesafe_main_version/utils/material_color_generator.dart';
 
 void main() {
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: MaterialApp(
+        routes: appRoutes,
         title: 'weSafe',
         theme: ThemeData(
           fontFamily: 'FuenteWeSafe',
