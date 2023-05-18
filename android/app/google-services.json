@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "288572061243",
+    "project_id": "wesafe-c1292",
+    "storage_bucket": "wesafe-c1292.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288572061243:android:46247b51ea6167f0918e1e",
+        "android_client_info": {
+          "package_name": "com.example.wesafe_main_version"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "288572061243-15hbrpo7pdclai7j9e66c2pvrdl9i02f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4sTROUZPP_Uy9g-gzXzbyqHHILeoDtbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "288572061243-15hbrpo7pdclai7j9e66c2pvrdl9i02f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

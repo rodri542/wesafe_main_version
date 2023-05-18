@@ -87,14 +87,15 @@ class _MainMenuPageState extends State<MainMenuPage> {
 
       ///Aqui es en donde se despliega la barra lateral
       drawer: Drawer(
-        width: 150,
+        backgroundColor: Color(0xff511262),
+        width: 200,
         elevation: 50,
         child: Column(children: const [
           SizedBox(
             height: 50,
           ),
           Text(
-            "Prueba@prueba.com",
+            "",
             style: TextStyle(
               color: Colors.black,
             ),
