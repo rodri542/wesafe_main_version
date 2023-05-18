@@ -167,10 +167,22 @@ class _LoginPageState extends State<LoginPage> with LoginMixin {
 
   void _submit(BuildContext context) {
     final formState = Form.of(context);
+
+
     if (formState?.validate() ?? false) {
+
+
       Navigator.pushNamed(context, Routes.mainPage);
       print('valido');
+
+
+
+
     } else {
+
+
+
+
       print('Invalido');
     }
   }
