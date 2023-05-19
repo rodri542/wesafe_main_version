@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
+import 'package:wesafe_main_version/pages/menu/lateral_bar.dart';
+
 class MainMenuPage extends StatefulWidget {
   const MainMenuPage({super.key});
 
@@ -22,10 +24,6 @@ class _MainMenuPageState extends State<MainMenuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-
-      ///para abrir el cajon lateral
-      //resizeToAvoidBottomInset: false,
-      //drawerEdgeDragWidth: 100,
       drawerEnableOpenDragGesture: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
@@ -73,7 +71,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
       ),
       body: Container(
         alignment: Alignment.center,
-        color: Colors.red,
+        color: const Color.fromARGB(255, 179, 42, 217),
         width: double.infinity,
         height: double.infinity,
         child: GoogleMap(
@@ -84,24 +82,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
           },
         ),
       ),
-
-      ///Aqui es en donde se despliega la barra lateral
-      drawer: Drawer(
-        backgroundColor: Color(0xff511262),
-        width: 200,
-        elevation: 50,
-        child: Column(children: const [
-          SizedBox(
-            height: 50,
-          ),
-          Text(
-            "",
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-        ]),
-      ),
+      drawer: const LateralBar(),
     );
   }
 }

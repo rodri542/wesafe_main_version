@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wesafe_main_version/pages/login/widgets/login_text_field.dart';
 import '../../routes/routes.dart';
 import 'login_mixin.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 List<String> list = <String>['Mujer', 'Hombre', 'Otro'];
 
@@ -20,15 +21,22 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
       _apellidoMaterno = '',
       _apellidoPaterno = '',
       _nombre = '';
+
   String? _equalpassword = '';
   String genero = list.last;
+  DateTime? _birthday;
 
   @override
   Widget build(BuildContext context) {
     String dropdownValue = genero;
     bool result = false;
 
-    if (_password == _equalpassword && _equalpassword != null) {
+    if (_password == _equalpassword &&
+        _equalpassword != null &&
+        _birthday != null &&
+        _nombre != '' &&
+        _apellidoMaterno != '' &&
+        _apellidoPaterno != '') {
       bool alowSubmit = emailValidator(_email) == null;
 
       if (alowSubmit) {
@@ -36,15 +44,6 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
       }
       if (alowSubmit) {
         alowSubmit = phoneValidator(_phone) == null;
-      }
-      if (alowSubmit) {
-        alowSubmit = namesValidator(_nombre) == null;
-      }
-      if (alowSubmit) {
-        alowSubmit = namesValidator(_apellidoMaterno) == null;
-      }
-      if (alowSubmit) {
-        alowSubmit = namesValidator(_apellidoPaterno) == null;
       }
       result = alowSubmit;
     }
@@ -111,7 +110,6 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
                     ),
                     child: SingleChildScrollView(
                       child: Column(
-                        key: const Key('list'),
                         children: [
                           LoginTextField(
                             initialValue: _email,
@@ -138,9 +136,11 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
                             textInputAction: TextInputAction.next,
                             label: 'Teléfono',
                             onChanged: (value) {
-                              setState(() {
-                                _phone = value.trim();
-                              });
+                              setState(
+                                () {
+                                  _phone = value.trim();
+                                },
+                              );
                             },
                             validator: phoneValidator,
                           ),
@@ -214,11 +214,15 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
                             validator: namesValidator,
                           ),
                           const SizedBox(height: 30),
-                          const Text(
-                            'Genero',
-                            style: TextStyle(
-                              color: Color(0xff511262),
-                              fontSize: 26,
+                          const SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              'Genero',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: Color(0xff511262),
+                                fontSize: 26,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -262,6 +266,33 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
                             ),
                           ),
                           const SizedBox(height: 30),
+                          const SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              'Fecha de nacimiento',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: Color(0xff511262),
+                                fontSize: 26,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Container(
+                              child: ElevatedButton(
+                                onPressed: _selectDate,
+                                child: Text(
+                                  textAlign: TextAlign.left,
+                                  comparate(),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 50),
                         ],
                       ),
                     ),
@@ -285,6 +316,33 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
         ),
       ),
     );
+  }
+
+  String comparate() {
+    if (_birthday == null) {
+      return 'Ingrese su fecha de nacimiento';
+    } else {
+      return '${_birthday?.day} / ${_birthday?.month} / ${_birthday?.year}';
+    }
+  }
+
+  Future<void> _selectDate() async {
+    final date = await showDatePicker(
+      initialEntryMode: DatePickerEntryMode.calendar,
+      helpText: null,
+      locale: const Locale('es'),
+      confirmText: 'Aceptar',
+      cancelText: 'Cancelar',
+      context: context,
+      initialDate: DateTime(2000),
+      firstDate: DateTime(1970),
+      lastDate: DateTime.now(),
+    );
+    if (date != null) {
+      setState(() {
+        _birthday = date;
+      });
+    }
   }
 
   void _submit(BuildContext context) {
