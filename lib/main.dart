@@ -1,7 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:wesafe_main_version/pages/menu/Maps.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:wesafe_main_version/routes/app_routes.dart';
 import 'package:wesafe_main_version/pages/login/login_page.dart';
 import 'package:wesafe_main_version/utils/material_color_generator.dart';
@@ -28,6 +28,14 @@ class MyApp extends StatelessWidget {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate
+        ],
+        supportedLocales: [
+          const Locale('es'),
+          const Locale('en'),
+        ],
         routes: appRoutes,
         title: 'weSafe',
         theme: ThemeData(
