@@ -16,6 +16,7 @@ class SingUpPage extends StatefulWidget {
 class _SingUpPageState extends State<SingUpPage> with LoginMixin {
   String _email = '',
       _password = '',
+      
       _phone = '',
       _apellidoMaterno = '',
       _apellidoPaterno = '',
