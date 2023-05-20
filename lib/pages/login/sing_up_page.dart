@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:wesafe_main_version/pages/login/widgets/login_text_field.dart';
 import '../../routes/routes.dart';
 import 'login_mixin.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 List<String> list = <String>['Mujer', 'Hombre', 'Otro'];
 
