@@ -11,7 +11,7 @@ void main() {
     DevicePreview(
       enabled: !kReleaseMode,
       builder: (context) {
-        return MyApp();
+        return const MyApp();
       },
     ),
   );
@@ -28,20 +28,20 @@ class MyApp extends StatelessWidget {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: MaterialApp(
-        localizationsDelegates: [
+        localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate
         ],
-        supportedLocales: [
-          const Locale('es'),
-          const Locale('en'),
+        supportedLocales: const [
+           Locale('es'),
+          Locale('en'),
         ],
         routes: appRoutes,
         title: 'weSafe',
         theme: ThemeData(
           fontFamily: 'FuenteWeSafe',
           primarySwatch: generateMaterialColor(
-            Color(0xff511262),
+            const Color(0xff511262),
           ),
         ),
         home: const LoginPage(),
