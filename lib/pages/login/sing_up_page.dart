@@ -33,7 +33,6 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
 
     if (_password == _equalpassword &&
         _equalpassword != null &&
-        _birthday != null &&
         _nombre != '' &&
         _apellidoMaterno != '' &&
         _apellidoPaterno != '') {

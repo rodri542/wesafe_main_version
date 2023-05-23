@@ -33,12 +33,16 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate
         ],
         supportedLocales: const [
-           Locale('es'),
+          Locale('es'),
           Locale('en'),
         ],
         routes: appRoutes,
         title: 'weSafe',
         theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+              iconTheme: IconThemeData(
+            color: Color(0xffB17A50),
+          )),
           fontFamily: 'FuenteWeSafe',
           primarySwatch: generateMaterialColor(
             const Color(0xff511262),
