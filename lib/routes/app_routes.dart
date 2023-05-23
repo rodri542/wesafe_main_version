@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wesafe_main_version/pages/login/reset_password.dart';
+import 'package:wesafe_main_version/pages/menu/add_contact_page.dart';
 import 'package:wesafe_main_version/pages/menu/config_page.dart';
 import 'package:wesafe_main_version/pages/menu/contacts_page.dart';
 import 'package:wesafe_main_version/pages/menu/historial_page.dart';
@@ -17,5 +18,6 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.contactsPage: (_) => const ContactsPage(),
     Routes.historialPage: (_) => const HistorialPage(),
     Routes.profilePage: (_) => const ProfilePage(),
+    Routes.addContactPage: (_) => const AddContactPage(),
   };
 }
