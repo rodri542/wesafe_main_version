@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wesafe_main_version/routes/routes.dart';
 
 class ConfigurationPage extends StatelessWidget {
   const ConfigurationPage({super.key});
@@ -51,7 +52,10 @@ class ConfigurationPage extends StatelessWidget {
                               Color(0xffB17A50),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, Routes.verifyAccountPage);
+                          },
                           icon: const Icon(
                             Icons.arrow_forward,
                             size: 30,
@@ -74,7 +78,10 @@ class ConfigurationPage extends StatelessWidget {
                               Color(0xffB17A50),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, Routes.deleteAccountPage);
+                          },
                           icon: const Icon(
                             Icons.arrow_forward,
                             size: 30,

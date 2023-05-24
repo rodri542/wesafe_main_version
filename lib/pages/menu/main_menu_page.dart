@@ -93,9 +93,10 @@ class _MainMenuPageState extends State<MainMenuPage> {
             print('se presiona');
           },
           child: const Icon(
-            color: Color.fromARGB(255, 255, 255, 255),
+            color: Color.fromARGB(255, 249, 5, 5),
             Icons.warning_amber,
             size: 50,
+            
           ),
         ),
       ),
