@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wesafe_main_version/pages/menu/verify_account.dart';
 
 class Routes {
   Routes._();
@@ -11,5 +12,7 @@ class Routes {
   static const historialPage = '/historial-page';
   static const profilePage = '/profile-page';
   static const addContactPage = '/add-contact-page';
+  static const deleteAccountPage = '/delete-account';
+  static const verifyAccountPage = '/verify-account';
 
 }
