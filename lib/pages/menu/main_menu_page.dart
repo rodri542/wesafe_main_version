@@ -18,6 +18,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
   PermissionStatus? _permissionGranted;
   bool? _serviceEnabled;
   Location location = Location();
+  StreamSubscription<LocationData>? listener ;
 
   void isEnabled() async {
     _serviceEnabled = await location.serviceEnabled();
@@ -37,13 +38,11 @@ class _MainMenuPageState extends State<MainMenuPage> {
   }
 
   void getCurrentLocation() async {
-    print(location);
     currentLocation = await location.getLocation();
-    print(currentLocation);
     setState(() {});
     GoogleMapController googleMapController = await _controller.future;
 
-    location.onLocationChanged.listen(
+      listener = location.onLocationChanged.listen(
       (newloc) {
         setState(
           () {
@@ -72,6 +71,12 @@ class _MainMenuPageState extends State<MainMenuPage> {
     super.initState();
   }
 
+@override
+  void dispose() {
+    listener?.cancel();
+    
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
