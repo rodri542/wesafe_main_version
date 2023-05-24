@@ -72,7 +72,8 @@ class _MainMenuPageState extends State<MainMenuPage> {
   }
 
 @override
-  void dispose() {
+  void dispose() { 
+    
     listener?.cancel();
     
     super.dispose();
