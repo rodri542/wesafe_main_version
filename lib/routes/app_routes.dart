@@ -14,7 +14,12 @@ import 'package:wesafe_main_version/pages/login/sing_up_page.dart';
 Map<String, Widget Function(BuildContext)> get appRoutes {
   return {
     Routes.singUpPage: (_) => const SingUpPage(),
-    Routes.mainPage: (_) => const MainMenuPage(),
+    Routes.mainPage: (context) {
+      final getting = ModalRoute.of(context)?.settings.arguments;
+      return MainMenuPage(
+        getting: getting,
+      );
+    },
     Routes.resetPassword: (_) => const ResetPasswordPage(),
     Routes.configPage: (_) => const ConfigurationPage(),
     Routes.contactsPage: (_) => const ContactsPage(),

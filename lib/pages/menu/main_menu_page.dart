@@ -1,25 +1,42 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'dart:async';
 import 'package:wesafe_main_version/pages/menu/lateral_bar.dart';
+import '../../json_user.dart';
 
 class MainMenuPage extends StatefulWidget {
-  const MainMenuPage({super.key});
+  const MainMenuPage({super.key, required this.getting});
+  final getting;
 
   @override
   State<MainMenuPage> createState() => _MainMenuPageState();
 }
 
 class _MainMenuPageState extends State<MainMenuPage> {
+  BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   final Completer<GoogleMapController> _controller = Completer();
   LocationData? currentLocation;
   PermissionStatus? _permissionGranted;
   bool? _serviceEnabled;
   Location location = Location();
-  StreamSubscription<LocationData>? listener ;
+  StreamSubscription<LocationData>? listener;
+  JsonParser? jsonParser;
 
+  //static const LatLng _kGooglePlex = LatLng(19.69664, -101.1997683);
+/*
+  void setCustomMarkerIcon() {
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(size: Size(10, 10)),
+      'assets/logo/LogoSinFondo_1.png',
+    ).then((value) {
+      destinationIcon = value;
+    });
+  }
+*/
   void isEnabled() async {
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled!) {
@@ -39,10 +56,11 @@ class _MainMenuPageState extends State<MainMenuPage> {
 
   void getCurrentLocation() async {
     currentLocation = await location.getLocation();
+    print(currentLocation);
     setState(() {});
     GoogleMapController googleMapController = await _controller.future;
 
-      listener = location.onLocationChanged.listen(
+    listener = location.onLocationChanged.listen(
       (newloc) {
         setState(
           () {
@@ -64,20 +82,44 @@ class _MainMenuPageState extends State<MainMenuPage> {
     );
   }
 
+  getMethod() async {
+    try {
+      var theUrl =
+          Uri.https('wesafeoficial.000webhostapp.com', '/newAlert.php');
+      var res = await http.post(theUrl, body: {
+        'ubi': '$currentLocation',
+        'fecha': '${DateTime.now()}',
+        'estado': '1',
+        'usuario': '${jsonParser?.getUsuario()}',
+      });
+      print(res.body);
+
+      var responsBody = json.decode(res.body);
+    } catch (e) {
+      print('Error aaaaaaaaaaaaaaaaaaaaaaaaaaaa      ${e}');
+    }
+  }
+
+  void inicia() {
+    jsonParser = JsonParser(widget.getting);
+  }
+
   @override
   void initState() {
+    //setCustomMarkerIcon();
     isEnabled();
     getCurrentLocation();
     super.initState();
+    inicia();
   }
 
-@override
-  void dispose() { 
-    
+  @override
+  void dispose() {
     listener?.cancel();
-    
+
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,13 +138,13 @@ class _MainMenuPageState extends State<MainMenuPage> {
           shape:
               BeveledRectangleBorder(borderRadius: BorderRadius.circular(6.7)),
           onPressed: () {
+            getMethod();
             print('se presiona');
           },
           child: const Icon(
             color: Color.fromARGB(255, 249, 5, 5),
             Icons.warning_amber,
             size: 50,
-            
           ),
         ),
       ),
@@ -140,6 +182,15 @@ class _MainMenuPageState extends State<MainMenuPage> {
               );
             } else {
               return GoogleMap(
+               /*
+                markers: {
+                  Marker(
+                    markerId: MarkerId('Alerta'),
+                    position: _kGooglePlex,
+                    icon: destinationIcon,
+                  )
+                },
+                */
                 buildingsEnabled: true,
                 compassEnabled: true,
                 myLocationEnabled: true,
