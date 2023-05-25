@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:wesafe_main_version/routes/app_routes.dart';
 import 'package:wesafe_main_version/pages/login/login_mixin.dart';
@@ -6,7 +8,7 @@ import 'package:wesafe_main_version/pages/login/widgets/login_text_field.dart';
 import '../../routes/routes.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({super.key, });
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -14,6 +16,25 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> with LoginMixin {
   String _email = '', _password = '';
+  bool? invalid = null;
+
+  getMethod() async {
+    try {
+      var theUrl = Uri.https('wesafeoficial.000webhostapp.com', '/login.php');
+      var res = await http.post(theUrl, body: {
+        'contrasena': '$_password',
+        'correo': "$_email",
+      });
+      invalid = false;
+      var responsBody = res.body;
+      print('valido');
+
+      Navigator.pushNamed(context, Routes.mainPage, arguments: responsBody);
+    } catch (e) {
+      invalid = true;
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +142,17 @@ class _LoginPageState extends State<LoginPage> with LoginMixin {
                             );
                           },
                         ),
+                        if (invalid != true)
+                          Text('')
+                        else
+                          const Text(
+                            'Correo y/o Contraseña incorrecta',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 20,
+                            ),
+                          ),
                         const SizedBox(height: 30),
                         TextButton(
                           onPressed: () {
@@ -156,7 +188,7 @@ class _LoginPageState extends State<LoginPage> with LoginMixin {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -166,24 +198,10 @@ class _LoginPageState extends State<LoginPage> with LoginMixin {
   }
 
   void _submit(BuildContext context) {
-    final formState = Form.of(context);
-
-
-    if (formState?.validate() ?? false) {
-
-
-      Navigator.pushNamed(context, Routes.mainPage);
-      print('valido');
-
-
-
-
+    getMethod();
+    if (invalid == false) {
     } else {
-
-
-
-
-      print('Invalido');
+      print('invalido');
     }
   }
 }
