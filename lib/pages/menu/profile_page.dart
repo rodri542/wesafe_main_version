@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:wesafe_main_version/pages/login/widgets/profile_text_field.dart';
+import '../../json_user.dart';
 import '../login/login_mixin.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.getting});
+    final getting;
+
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -11,11 +14,11 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> with LoginMixin {
   bool modifyactivate = false;
-  String _email = 'prueba@prueba.com',
+  String _email = '',
       _emailM = '',
-      _password = 'Carreras12!',
+      _password = '',
       _passwordM = '',
-      _phone = '4444444444',
+      _phone = '',
       _phoneM = '',
       _apellidoMaterno = '',
       _apellidoPaterno = '',
@@ -23,14 +26,30 @@ class _ProfilePageState extends State<ProfilePage> with LoginMixin {
       _gender = '',
       _age = '';
 
+  JsonParser? jsonParser;
+
+  void inicia() {
+    jsonParser = JsonParser(widget.getting);
+  }
+
   void download() {
-    //aqui iniciar los datos
+    _email= jsonParser!.getCorreo();
+    _nombre= jsonParser!.getNombre();
+    _apellidoPaterno= jsonParser!.getApellidoPaterno();
+    _apellidoMaterno= jsonParser!.getApellidoMaterno();
+    _phone= jsonParser!.getTelefono();
+    _age= jsonParser!.getFechaNacimiento();
+    _gender= jsonParser!.getGenero();
+
+
   }
 
   @override
   void initState() {
-    download();
     super.initState();
+    inicia();
+        download();
+
   }
 
   @override

@@ -3,7 +3,9 @@ import 'package:wesafe_main_version/pages/menu/widgets/show_historial.dart';
 import 'package:wesafe_main_version/routes/routes.dart';
 
 class HistorialPage extends StatefulWidget {
-  const HistorialPage({super.key});
+  const HistorialPage({super.key, required this.getting});
+    final getting;
+
 
   @override
   State<HistorialPage> createState() => _HistorialPageState();

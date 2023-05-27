@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:wesafe_main_version/routes/routes.dart';
 
 class ConfigurationPage extends StatelessWidget {
-  const ConfigurationPage({super.key});
+  const ConfigurationPage({super.key, required this.getting});
+    final getting;
+
 
   @override
   Widget build(BuildContext context) {

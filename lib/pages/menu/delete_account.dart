@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class DeleteAcountPage extends StatefulWidget {
-  const DeleteAcountPage({super.key});
+  const DeleteAcountPage({super.key, required this.getting});
+    final getting;
+
 
   @override
   State<DeleteAcountPage> createState() => _DeleteAcountPageState();

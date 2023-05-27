@@ -3,7 +3,8 @@ import 'package:wesafe_main_version/pages/menu/widgets/show_contacts.dart';
 import 'package:wesafe_main_version/routes/routes.dart';
 
 class ContactsPage extends StatefulWidget {
-  const ContactsPage({super.key});
+  const ContactsPage({super.key, required this.getting});
+  final getting;
 
   @override
   State<ContactsPage> createState() => _ContactsPageState();
