@@ -1,11 +1,15 @@
 import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../json_user.dart';
+
 class VerifyAccountPage extends StatefulWidget {
-  const VerifyAccountPage({super.key});
+  const VerifyAccountPage({super.key, required this.getting});
+  final getting;
 
   @override
   State<VerifyAccountPage> createState() => _VerifyAccountPageState();
@@ -13,6 +17,12 @@ class VerifyAccountPage extends StatefulWidget {
 
 class _VerifyAccountPageState extends State<VerifyAccountPage> {
   File? image;
+
+  JsonParser? jsonParser;
+
+  void inicia() {
+    jsonParser = JsonParser(widget.getting);
+  }
 
   Future pickImage() async {
     try {
@@ -25,6 +35,19 @@ class _VerifyAccountPageState extends State<VerifyAccountPage> {
     } on PlatformException catch (e) {
       print('Fallo al elegir imagen $e');
     }
+  }
+
+  getMethod() async {
+    try {
+      var theUrl = Uri.https('wesafeoficial.000webhostapp.com', '/singup.php');
+      var res = await http.post(theUrl, body: {
+        'correo': "${jsonParser?.getCorreo()}",
+        'identificacion': '$image',
+      });
+      var responsBody = res.body;
+      print('Guardado');
+    } catch (e) {}
+    setState(() {});
   }
 
   @override
@@ -66,8 +89,8 @@ class _VerifyAccountPageState extends State<VerifyAccountPage> {
                   Container(
                     height: 300,
                     width: 400,
-                    padding:
-                        const EdgeInsets.only(top: 30, left: 20, right: 20, bottom: 20),
+                    padding: const EdgeInsets.only(
+                        top: 30, left: 20, right: 20, bottom: 20),
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.black45,

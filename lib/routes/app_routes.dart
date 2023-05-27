@@ -21,12 +21,48 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
       );
     },
     Routes.resetPassword: (_) => const ResetPasswordPage(),
-    Routes.configPage: (_) => const ConfigurationPage(),
-    Routes.contactsPage: (_) => const ContactsPage(),
-    Routes.historialPage: (_) => const HistorialPage(),
-    Routes.profilePage: (_) => const ProfilePage(),
-    Routes.addContactPage: (_) => const AddContactPage(),
-    Routes.deleteAccountPage: (_) => const DeleteAcountPage(),
-    Routes.verifyAccountPage: (_) => const VerifyAccountPage(),
+
+    Routes.configPage: (context) {
+        final getting = ModalRoute.of(context)?.settings.arguments;
+      return ConfigurationPage(
+        getting: getting,
+      );
+    },
+    Routes.contactsPage: (context) {
+      final getting = ModalRoute.of(context)?.settings.arguments;
+      return ContactsPage(
+        getting: getting,
+      );
+    },
+    Routes.historialPage: (context) {
+      final getting = ModalRoute.of(context)?.settings.arguments;
+      return HistorialPage(
+        getting: getting,
+      );
+    },
+    Routes.profilePage: (context) {
+      final getting = ModalRoute.of(context)?.settings.arguments;
+      return ProfilePage(
+        getting: getting,
+      );
+    },
+    Routes.addContactPage: (context) {
+      final getting = ModalRoute.of(context)?.settings.arguments;
+      return AddContactPage(
+        getting: getting,
+      );
+    },
+    Routes.deleteAccountPage: (context) {
+      final getting = ModalRoute.of(context)?.settings.arguments;
+      return DeleteAcountPage(
+        getting: getting,
+      );
+    },
+    Routes.verifyAccountPage: (context) {
+      final getting = ModalRoute.of(context)?.settings.arguments;
+      return VerifyAccountPage(
+        getting: getting,
+      );
+    },
   };
 }

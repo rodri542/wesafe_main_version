@@ -1,16 +1,20 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:wesafe_main_version/pages/login/login_page.dart';
+import '../../json_user.dart';
 import '../../routes/routes.dart';
 
 class LateralBar extends StatefulWidget {
-  const LateralBar({super.key});
+  const LateralBar({super.key, required this.getting});
+  final getting;
 
   @override
   State<LateralBar> createState() => _LateralBarState();
 }
 
 class _LateralBarState extends State<LateralBar> {
+
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -53,6 +57,8 @@ class _LateralBarState extends State<LateralBar> {
                     Navigator.popUntil(
                       context,
                       (route) => route.isFirst,
+
+                    
                     );
                     print(context);
                   },
@@ -89,7 +95,7 @@ class _LateralBarState extends State<LateralBar> {
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: () {
-          Navigator.pushNamed(context, ruta);
+          Navigator.pushNamed(context, ruta, arguments: widget.getting);
         },
         icon: const Icon(
           Icons.arrow_right_alt_outlined,

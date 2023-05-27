@@ -4,7 +4,9 @@ import 'package:wesafe_main_version/pages/login/widgets/login_text_field.dart';
 import '../login/login_mixin.dart';
 
 class AddContactPage extends StatefulWidget {
-  const AddContactPage({super.key});
+  const AddContactPage({super.key, this.getting});
+    final getting;
+
 
   @override
   State<AddContactPage> createState() => _AddContactPageState();

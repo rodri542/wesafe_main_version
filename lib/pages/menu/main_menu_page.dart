@@ -182,7 +182,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
               );
             } else {
               return GoogleMap(
-               /*
+                /*
                 markers: {
                   Marker(
                     markerId: MarkerId('Alerta'),
@@ -208,7 +208,9 @@ class _MainMenuPageState extends State<MainMenuPage> {
           },
         ),
       ),
-      drawer: const LateralBar(),
+      drawer: LateralBar(
+        getting: widget.getting,
+      ),
     );
   }
 }

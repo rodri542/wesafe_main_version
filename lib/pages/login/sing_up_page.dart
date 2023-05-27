@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:wesafe_main_version/pages/login/widgets/login_text_field.dart';
 import '../../routes/routes.dart';
 import 'login_mixin.dart';
@@ -16,7 +17,6 @@ class SingUpPage extends StatefulWidget {
 class _SingUpPageState extends State<SingUpPage> with LoginMixin {
   String _email = '',
       _password = '',
-      
       _phone = '',
       _apellidoMaterno = '',
       _apellidoPaterno = '',
@@ -25,6 +25,27 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
   String? _equalpassword = '';
   String genero = list.last;
   DateTime? _birthday;
+
+  getMethod() async {
+    try {
+      var theUrl = Uri.https('wesafeoficial.000webhostapp.com', '/singup.php');
+      var res = await http.post(theUrl, body: {
+        'nombre': '$_nombre',
+        'apellidomaterno': '$_apellidoPaterno',
+        'apellidopaterno': '$_apellidoMaterno',
+        'numero': '$_phone',
+        'genero': '$genero',
+        'compleaños': '$_birthday',
+        'contrasena': '$_password',
+        'correo': "$_email",
+      });
+      var responsBody = res.body;
+      print('Guardado');
+    } catch (e) {
+      
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
