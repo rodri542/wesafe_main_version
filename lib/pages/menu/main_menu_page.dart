@@ -26,8 +26,8 @@ class _MainMenuPageState extends State<MainMenuPage> {
   StreamSubscription<LocationData>? listener;
   JsonParser? jsonParser;
 
-  //static const LatLng _kGooglePlex = LatLng(19.69664, -101.1997683);
-/*
+  static const LatLng _kGooglePlex = LatLng(19.721178712723866, -101.18615112227262);
+
   void setCustomMarkerIcon() {
     BitmapDescriptor.fromAssetImage(
       ImageConfiguration(size: Size(10, 10)),
@@ -36,7 +36,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
       destinationIcon = value;
     });
   }
-*/
+
   void isEnabled() async {
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled!) {
@@ -106,7 +106,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
 
   @override
   void initState() {
-    //setCustomMarkerIcon();
+    setCustomMarkerIcon();
     isEnabled();
     getCurrentLocation();
     super.initState();
@@ -182,7 +182,6 @@ class _MainMenuPageState extends State<MainMenuPage> {
               );
             } else {
               return GoogleMap(
-                /*
                 markers: {
                   Marker(
                     markerId: MarkerId('Alerta'),
@@ -190,7 +189,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
                     icon: destinationIcon,
                   )
                 },
-                */
+                
                 buildingsEnabled: true,
                 compassEnabled: true,
                 myLocationEnabled: true,
