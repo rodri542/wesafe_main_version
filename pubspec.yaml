@@ -42,8 +42,15 @@ dependencies:
   location: ^4.4.0
   image_picker: ^0.8.7+5
   http: 
-  
-  
+  permission_handler: ^10.2.0
+  path_provider: ^2.0.15
+  flutter_sound: ^9.2.13
+  camera: ^0.10.5+2
+
+
+
+
+
 
 
 dev_dependencies:

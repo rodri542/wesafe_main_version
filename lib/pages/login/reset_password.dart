@@ -128,7 +128,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with LoginMixin {
 
   void _submit(BuildContext context) {
     final formState = Form.of(context);
-    if (formState?.validate() ?? false) {
+    if (formState.validate() ) {
       Navigator.maybePop(context, Routes.mainPage);
       print('valido');
     } else {

@@ -40,8 +40,7 @@ class _ProfilePageState extends State<ProfilePage> with LoginMixin {
     _phone= jsonParser!.getTelefono();
     _age= jsonParser!.getFechaNacimiento();
     _gender= jsonParser!.getGenero();
-
-
+    _password = jsonParser!.getContrasena();
   }
 
   @override
