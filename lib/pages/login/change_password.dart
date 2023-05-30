@@ -1,49 +1,63 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:wesafe_main_version/pages/login/widgets/login_text_field.dart';
 import 'package:http/http.dart' as http;
 import '../../routes/routes.dart';
 import 'login_mixin.dart';
 
-class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
-
+class ChangePasswordPage extends StatefulWidget {
+  const ChangePasswordPage({
+    super.key,
+    required this.getting,
+  });
+  final getting;
   @override
-  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
+  State<ChangePasswordPage> createState() => _ChangePasswordPageState();
 }
 
-class _ResetPasswordPageState extends State<ResetPasswordPage> with LoginMixin {
-  String _email = '';
-  int? randomNumber;
-  Random random = Random();
+class _ChangePasswordPageState extends State<ChangePasswordPage>
+    with LoginMixin {
+  bool error = false;
+  String? responsBody;
+  String? _equalpassword;
+  String? _password;
 
   getMethod() async {
-    randomNumber = 10000 + random.nextInt(90000);
-    print(randomNumber);
     try {
-      var theUrl = Uri.https('wesafeoficial.000webhostapp.com', '/correo.php');
+      var theUrl =
+          Uri.https('wesafeoficial.000webhostapp.com', '/updateContrasena.php');
       var res = await http.post(theUrl, body: {
-        'para': _email,
-        'titulo': 'Correo de recuperación de cuenta',
-        'mensaje': 'Su numero de confirmación es: $randomNumber',
+        'contrasena': _password,
+        'correo': widget.getting,
       });
-      var responsBody = res.body;
-      print(res.body);
-
-      Navigator.pushReplacementNamed(
-        context,
-        Routes.getResetCode,
-        arguments: {'email': _email, 'numero': randomNumber},
-      );
-    } catch (e) {
-      print(e);
-    }
-    setState(() {});
+      setState(() {
+        responsBody = res.body;
+        if (responsBody != null) {
+          if (responsBody!.contains('Se agrego correctamente')) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.loginPage,
+              (_) => false,
+            );
+          } else {
+            print('error');
+          }
+        }
+      });
+    } catch (e) {}
   }
 
   @override
   Widget build(BuildContext context) {
-    bool alowSubmit = emailValidator(_email) == null;
+    bool result = false;
+
+    if (_password != null && _equalpassword != null) {
+      bool alowSubmit = passwordValidator(_password) == null;
+
+      if (alowSubmit) {
+        alowSubmit = passwordValidator(_equalpassword) == null;
+      }
+      result = alowSubmit;
+    }
 
     return Form(
       child: Scaffold(
@@ -95,12 +109,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with LoginMixin {
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
-                  height: 225,
+                  height: 325,
                   child: Stack(
                     alignment: Alignment.topCenter,
                     children: [
                       Container(
-                        height: 200,
+                        height: 300,
                         padding: const EdgeInsets.only(
                             top: 20, left: 20, right: 20, bottom: 30),
                         decoration: BoxDecoration(
@@ -111,33 +125,62 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with LoginMixin {
                           color: Colors.black12,
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        child: LoginTextField(
-                          msg:
-                              'El email debe contener @ y tener un formato normal',
-                          label: 'Ingrese su correo electronico:',
-                          textInputAction: TextInputAction.next,
-                          onChanged: (text) {
-                            setState(
-                              () {
-                                _email = text.trim();
+                        child: Column(
+                          children: [
+                            LoginTextField(
+                              initialValue: _password,
+                              msg:
+                                  'La contraseña debe tener almenos 8 caracteres, una letra mayuscula, un numero y un caracter especial',
+                              textInputAction: TextInputAction.next,
+                              label: 'Nueva Contraseña',
+                              onChanged: (value) {
+                                setState(() {
+                                  _password = value.trim();
+                                });
                               },
-                            );
-                          },
-                          keyboardType: TextInputType.emailAddress,
-                          validator: emailValidator,
+                              obscureText: true,
+                              validator: passwordValidator,
+                            ),
+                            const SizedBox(height: 30),
+                            LoginTextField(
+                              initialValue: _equalpassword,
+                              msg:
+                                  'La contraseña debe tener almenos 8 caracteres, una letra mayuscula, un numero y un caracter especial',
+                              label: 'Repite tu Contraseña',
+                              textInputAction: TextInputAction.next,
+                              onChanged: (value) {
+                                setState(() {
+                                  _equalpassword = value.trim();
+                                });
+                              },
+                              obscureText: true,
+                              validator: passwordValidator,
+                            ),
+                          ],
                         ),
                       ),
+                      error
+                          ? const Positioned(
+                              top: 230,
+                              child: Text(
+                                'Los campos no coinciden',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 20,
+                                ),
+                              ))
+                          : const Text(''),
                       Positioned(
                         bottom: 0,
                         child: Builder(
                           builder: (context) {
                             return ElevatedButton(
-                              onPressed: alowSubmit
+                              onPressed: result
                                   ? () {
                                       _submit(context);
                                     }
                                   : null,
-                              child: const Text('Enviar'),
+                              child: const Text('Cambiar contraseña'),
                             );
                           },
                         ),
@@ -154,12 +197,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with LoginMixin {
   }
 
   void _submit(BuildContext context) {
-    final formState = Form.of(context);
-    if (formState.validate()) {
+    if (_password == _equalpassword) {
       getMethod();
-      print('valido');
     } else {
-      print('Invalido');
+      setState(() {
+        error = true;
+      });
     }
   }
 }

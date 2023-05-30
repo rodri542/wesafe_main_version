@@ -1,14 +1,14 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:wesafe_main_version/routes/app_routes.dart';
 import 'package:wesafe_main_version/pages/login/login_mixin.dart';
 import 'package:wesafe_main_version/pages/login/widgets/login_text_field.dart';
 
 import '../../routes/routes.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, });
+  const LoginPage({
+    super.key,
+  });
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -16,14 +16,14 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> with LoginMixin {
   String _email = '', _password = '';
-  bool? invalid = null;
+  bool? invalid;
 
   getMethod() async {
     try {
       var theUrl = Uri.https('wesafeoficial.000webhostapp.com', '/login.php');
       var res = await http.post(theUrl, body: {
-        'contrasena': '$_password',
-        'correo': "$_email",
+        'contrasena': _password,
+        'correo': _email,
       });
       invalid = false;
       var responsBody = res.body;

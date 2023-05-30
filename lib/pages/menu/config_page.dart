@@ -3,8 +3,7 @@ import 'package:wesafe_main_version/routes/routes.dart';
 
 class ConfigurationPage extends StatelessWidget {
   const ConfigurationPage({super.key, required this.getting});
-    final getting;
-
+  final getting;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +55,8 @@ class ConfigurationPage extends StatelessWidget {
                           ),
                           onPressed: () {
                             Navigator.pushNamed(
-                                context, Routes.verifyAccountPage);
+                                context, Routes.verifyAccountPage,
+                                arguments: getting);
                           },
                           icon: const Icon(
                             Icons.arrow_forward,
@@ -82,7 +82,8 @@ class ConfigurationPage extends StatelessWidget {
                           ),
                           onPressed: () {
                             Navigator.pushNamed(
-                                context, Routes.deleteAccountPage);
+                                context, Routes.deleteAccountPage,
+                                arguments: getting);
                           },
                           icon: const Icon(
                             Icons.arrow_forward,

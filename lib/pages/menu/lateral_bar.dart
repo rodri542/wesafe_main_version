@@ -5,16 +5,16 @@ import '../../json_user.dart';
 import '../../routes/routes.dart';
 
 class LateralBar extends StatefulWidget {
-  const LateralBar({super.key, required this.getting});
+  const LateralBar(
+      {super.key, required this.getting, required this.jsonAlertParser});
   final getting;
+  final jsonAlertParser;
 
   @override
   State<LateralBar> createState() => _LateralBarState();
 }
 
 class _LateralBarState extends State<LateralBar> {
-
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -57,8 +57,6 @@ class _LateralBarState extends State<LateralBar> {
                     Navigator.popUntil(
                       context,
                       (route) => route.isFirst,
-
-                    
                     );
                     print(context);
                   },
@@ -95,7 +93,11 @@ class _LateralBarState extends State<LateralBar> {
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: () {
-          Navigator.pushNamed(context, ruta, arguments: widget.getting);
+          Navigator.pushNamed(
+            context,
+            ruta,
+            arguments: widget.getting,
+          );
         },
         icon: const Icon(
           Icons.arrow_right_alt_outlined,

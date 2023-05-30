@@ -66,4 +66,8 @@ class JsonParser {
   String getContactos() {
     return getField("Contactos");
   }
+
+   String getFotoPerfil() {
+    return getField("img_Perfil");
+  }
 }

@@ -1,49 +1,36 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:wesafe_main_version/pages/login/widgets/login_text_field.dart';
-import 'package:http/http.dart' as http;
 import '../../routes/routes.dart';
 import 'login_mixin.dart';
 
-class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+class GetResetCodePage extends StatefulWidget {
+  const GetResetCodePage(
+      {super.key, required this.number, required this.email});
+  final number;
+  final email;
 
   @override
-  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
+  State<GetResetCodePage> createState() => _GetResetCodePageState();
 }
 
-class _ResetPasswordPageState extends State<ResetPasswordPage> with LoginMixin {
-  String _email = '';
+class _GetResetCodePageState extends State<GetResetCodePage> with LoginMixin {
   int? randomNumber;
   Random random = Random();
-
-  getMethod() async {
-    randomNumber = 10000 + random.nextInt(90000);
-    print(randomNumber);
-    try {
-      var theUrl = Uri.https('wesafeoficial.000webhostapp.com', '/correo.php');
-      var res = await http.post(theUrl, body: {
-        'para': _email,
-        'titulo': 'Correo de recuperación de cuenta',
-        'mensaje': 'Su numero de confirmación es: $randomNumber',
-      });
-      var responsBody = res.body;
-      print(res.body);
-
-      Navigator.pushReplacementNamed(
-        context,
-        Routes.getResetCode,
-        arguments: {'email': _email, 'numero': randomNumber},
-      );
-    } catch (e) {
-      print(e);
-    }
-    setState(() {});
-  }
+  bool alowSubmit = false;
+  bool error = false;
 
   @override
   Widget build(BuildContext context) {
-    bool alowSubmit = emailValidator(_email) == null;
+    if (randomNumber != null) {
+      setState(() {
+        alowSubmit = true;
+      });
+    } else {
+      setState(() {
+        alowSubmit = false;
+      });
+    }
 
     return Form(
       child: Scaffold(
@@ -112,21 +99,30 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with LoginMixin {
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: LoginTextField(
-                          msg:
-                              'El email debe contener @ y tener un formato normal',
-                          label: 'Ingrese su correo electronico:',
+                          msg: 'Ingrese el codigo que se envió a su correo',
+                          label: 'Ingrese el codigo que se envió a su correo',
                           textInputAction: TextInputAction.next,
                           onChanged: (text) {
                             setState(
                               () {
-                                _email = text.trim();
+                                randomNumber = int.tryParse(text);
                               },
                             );
                           },
-                          keyboardType: TextInputType.emailAddress,
-                          validator: emailValidator,
+                          keyboardType: TextInputType.number,
                         ),
                       ),
+                      error
+                          ? const Positioned(
+                              top: 140,
+                              child: Text(
+                                'El codigo es incorrecto',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 20,
+                                ),
+                              ))
+                          : const Text(''),
                       Positioned(
                         bottom: 0,
                         child: Builder(
@@ -137,7 +133,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with LoginMixin {
                                       _submit(context);
                                     }
                                   : null,
-                              child: const Text('Enviar'),
+                              child: const Text('Validar numero'),
                             );
                           },
                         ),
@@ -154,12 +150,15 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with LoginMixin {
   }
 
   void _submit(BuildContext context) {
-    final formState = Form.of(context);
-    if (formState.validate()) {
-      getMethod();
-      print('valido');
+    if (widget.number == randomNumber) {
+      Navigator.pushReplacementNamed(context, Routes.changePasswordPage,
+          arguments: widget.email);
     } else {
-      print('Invalido');
+      setState(() {
+        error = true;
+      });
     }
+
+    print('valido');
   }
 }

@@ -31,20 +31,17 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
       var theUrl = Uri.https('wesafeoficial.000webhostapp.com', '/singup.php');
       var res = await http.post(theUrl, body: {
         'nombre': '$_nombre',
-        'apellidomaterno': '$_apellidoPaterno',
-        'apellidopaterno': '$_apellidoMaterno',
+        'apellidomaterno': '$_apellidoMaterno',
+        'apellidopaterno': '$_apellidoPaterno',
         'numero': '$_phone',
         'genero': '$genero',
-        'compleaños': '$_birthday',
+        'compleanos': '$_birthday',
         'contrasena': '$_password',
         'correo': "$_email",
       });
       var responsBody = res.body;
-      print('Guardado');
-    } catch (e) {
-      
-    }
-    setState(() {});
+      print(res.body);
+    } catch (e) {}
   }
 
   @override
@@ -368,9 +365,9 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
   void _submit(BuildContext context) {
     final formState = Form.of(context);
 
-    if (formState?.validate() ?? false) {
-      Navigator.pushNamed(context, Routes.mainPage);
-
+    if (formState.validate()) {
+      getMethod();
+      Navigator.pop(context);
       print('valido');
     } else {
       print('Invalido');

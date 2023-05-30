@@ -24,10 +24,11 @@ class _ShowContactsState extends State<ShowContacts> {
             child: Container(
               alignment: Alignment.centerLeft,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  Text('Nombre: '),
+                  Text('Nombre: Pedro'),
                   SizedBox(height: 10),
-                  Text('Usuario: '),
+                  Text('Usuario: 3'),
                 ],
               ),
             ),
