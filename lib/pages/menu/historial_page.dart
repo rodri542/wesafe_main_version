@@ -51,7 +51,10 @@ class _HistorialPageState extends State<HistorialPage> {
       });
       var responsBody = res.body;
       print('$responsBody');
-      setState(() {});
+      setState(() {
+        
+      });
+
     } catch (e) {
       print(e);
     }

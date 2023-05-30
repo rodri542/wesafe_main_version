@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart'
     as permission_handler;
 import 'package:flutter/services.dart';
@@ -44,6 +46,8 @@ class _MainMenuPageState extends State<MainMenuPage> {
   int recordCount2 = 0;
   bool cambio = false;
   String? response;
+
+  BuildContext? myContext;
 
   Future initRecorder() async {
     final status3 = await permission_handler.Permission.microphone.request();
@@ -144,6 +148,8 @@ class _MainMenuPageState extends State<MainMenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    myContext = context;
+
     return Scaffold(
       drawerEnableOpenDragGesture: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -301,6 +307,9 @@ class _MainMenuPageState extends State<MainMenuPage> {
             convertStringToLocation(i).longitude!,
           ),
           icon: destinationIcon,
+          onTap: () {
+            showCustomModal(i);
+          },
         );
         setState(() {
           print('${jsonAlertParser?.getIdAlerta(i)}');
@@ -309,6 +318,141 @@ class _MainMenuPageState extends State<MainMenuPage> {
         });
       }
     }
+  }
+
+  void showCustomModal(int index) {
+    if (myContext != null) {
+      showModalBottomSheet(
+        context: myContext!,
+        backgroundColor: Colors.transparent,
+        builder: (context) {
+          return Container(
+            decoration: const BoxDecoration(
+              color: Color(0xff761a8d),
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(40),
+              ),
+            ),
+            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: Column(
+              children: [
+                Text(
+                  'Usuario: ${jsonAlertParser!.getUsuario(index)}',
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                jsonAlertParser != null
+                    ? Text(
+                        'Fecha: ${formatDate(jsonAlertParser!.getFecha(index))}',
+                        textAlign: TextAlign.start,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text(''),
+                const SizedBox(height: 10),
+                jsonAlertParser != null
+                    ? Text(
+                        'Ubicación: ${jsonAlertParser?.getUbicacion(index)}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text(''),
+                const SizedBox(height: 10),
+                jsonAlertParser != null
+                    ? imagenes(jsonAlertParser!.getImagenFrontal(index))
+                    : const Text(''),
+                const SizedBox(height: 10),
+                jsonAlertParser != null
+                    ? imagenes(jsonAlertParser!.getImagenTrasera(index))
+                    : const Text(''),
+                jsonAlertParser != null
+                    ? audio(jsonAlertParser!.getAudio(index))
+                    : const Text(''),
+              ],
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  imagenes(String foto) {
+    List<int> bytes = foto
+        .replaceAll('[', '') // Eliminar el corchete de apertura
+        .replaceAll(']', '') // Eliminar el corchete de cierre
+        .split(', ') // Separar los valores por coma y espacio
+        .map<int>((value) => int.parse(value)) // Convertir cada valor a entero
+        .toList();
+
+    Uint8List byteData = Uint8List.fromList(bytes);
+    return Container(
+      height: 50,
+      alignment: Alignment.center,
+      child: Image.memory(byteData,
+          fit: BoxFit.contain, alignment: Alignment.center),
+    );
+  }
+
+  String formatDate(String dateTimeString) {
+    print(dateTimeString);
+    // Parsear la cadena de texto a un objeto DateTime
+    DateTime dateTime = DateTime.parse(dateTimeString);
+
+    // Obtener los componentes de la fecha y hora
+    int hour = dateTime.hour;
+    int day = dateTime.day;
+    int month = dateTime.month;
+    int year = dateTime.year;
+
+    // Obtener el nombre del mes a partir del número del mes
+    List<String> monthNames = [
+      '', // Dejar el primer elemento vacío para coincidir con el índice de los meses (enero = 1)
+      'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+    ];
+    String monthName = monthNames[month];
+
+    // Construir la cadena de texto formateada
+    String formattedDate =
+        ' $day de $monthName de $year,\n Hora de activación: $hour:00';
+
+    return formattedDate;
+  }
+
+  audio(String audio) {
+    List<int> bytes = audio
+        .replaceAll('[', '') // Eliminar el corchete de apertura
+        .replaceAll(']', '') // Eliminar el corchete de cierre
+        .split(', ') // Separar los valores por coma y espacio
+        .map<int>((value) => int.parse(value)) // Convertir cada valor a entero
+        .toList();
+
+    Uint8List byteData = Uint8List.fromList(bytes);
+    AudioPlayer audioPlayer = AudioPlayer();
+
+    return Container(
+      height: 100,
+      alignment: Alignment.center,
+      child: ElevatedButton(
+        onPressed: () async {
+          final tempDir = await getTemporaryDirectory();
+          final tempPath = tempDir.path;
+          final filePath = '$tempPath/audio.mp3';
+          final file = await File(filePath).writeAsBytes(byteData);
+
+          final Uint8List fileData = await file.readAsBytes();
+          await audioPlayer.play(BytesSource(fileData));
+          print('reproduciendo');
+        },
+        child: Text('Reproducir audio'),
+      ),
+    );
   }
 
   Future<void> _captureImages() async {
