@@ -77,6 +77,8 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
             child: Column(
               children: [
                 Container(
+                  width: double.infinity,
+                  height: double.infinity,
                   alignment: Alignment.center,
                   color: Colors.transparent,
                   child: Row(
@@ -367,7 +369,47 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
 
     if (formState.validate()) {
       getMethod();
-      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            alignment: Alignment.center,
+            backgroundColor: Colors.white,
+            title: const Text(
+              'Registro exitoso',
+              textAlign: TextAlign.center,
+            ),
+            content: Container(
+              alignment: Alignment.center,
+              height: 30,
+              width: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: const Color(0xff511262),
+              ),
+              child: const Text(
+                'Se registró tu cuenta con exito',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            actions: [
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Routes.loginPage,
+                      (_) => false,
+                    );
+                  },
+                  child: const Text('Ok', style: TextStyle()),
+                ),
+              ),
+            ],
+          );
+        },
+      );
       print('valido');
     } else {
       print('Invalido');

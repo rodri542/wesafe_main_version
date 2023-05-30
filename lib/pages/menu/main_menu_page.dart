@@ -403,8 +403,6 @@ class _MainMenuPageState extends State<MainMenuPage> {
         nameParser = JsonParser(responsBody);
         setState(() {
           nombre = nameParser!.getNombre();
-          print(
-              'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $nombre');
         });
         return nombre;
       }

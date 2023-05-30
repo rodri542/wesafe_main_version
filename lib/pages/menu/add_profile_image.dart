@@ -37,7 +37,7 @@ class _ProfileImagePageState extends State<ProfileImagePage> {
         'usuario': '${jsonParser?.getUsuario()}',
         'imagenF': '$frontImageBytes2',
       });
-      
+
       Navigator.pop(context, frontImageBytes2);
 
       var responsBody = json.decode(res.body);
@@ -144,7 +144,46 @@ class _ProfileImagePageState extends State<ProfileImagePage> {
                             ? () {
                                 if (image != null) {
                                   DBSaving();
-                                  print('Guardado');
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        alignment: Alignment.center,
+                                        backgroundColor: Colors.white,
+                                        title: const Text(
+                                          'Se actualizó tu foto de perfil',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        content: Container(
+                                          alignment: Alignment.center,
+                                          height: 40,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: const Color(0xff511262),
+                                          ),
+                                          child: const Text(
+                                            'Se actualizó tu foto con exito',
+                                            textAlign: TextAlign.center,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                        actions: [
+                                          Center(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('Ok',
+                                                  style: TextStyle()),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 }
                               }
                             : null,

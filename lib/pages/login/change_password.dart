@@ -33,10 +33,46 @@ class _ChangePasswordPageState extends State<ChangePasswordPage>
         responsBody = res.body;
         if (responsBody != null) {
           if (responsBody!.contains('Se agrego correctamente')) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.loginPage,
-              (_) => false,
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  alignment: Alignment.center,
+                  backgroundColor: Colors.white,
+                  title: const Text(
+                    'Cambio exitoso',
+                    textAlign: TextAlign.center,
+                  ),
+                  content: Container(
+                    alignment: Alignment.center,
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xff511262),
+                    ),
+                    child: const Text(
+                      'Se cambió su contraseña con exito',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  actions: [
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            Routes.loginPage,
+                            (_) => false,
+                          );
+                        },
+                        child: const Text('Ok', style: TextStyle()),
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           } else {
             print('error');
