@@ -40,12 +40,14 @@ class _MainMenuPageState extends State<MainMenuPage> {
   Location location = Location();
   StreamSubscription<LocationData>? listener;
   JsonParser? jsonParser;
+  JsonParser? nameParser;
   JsonAlertParser? jsonAlertParser;
   final Map<MarkerId, Marker> _markers = {};
   int recordCount = 0;
   int recordCount2 = 0;
   bool cambio = false;
   String? response;
+  String nombre = '';
 
   BuildContext? myContext;
 
@@ -321,6 +323,8 @@ class _MainMenuPageState extends State<MainMenuPage> {
   }
 
   void showCustomModal(int index) {
+    getnames(jsonAlertParser!.getUsuario(index));
+
     if (myContext != null) {
       showModalBottomSheet(
         context: myContext!,
@@ -336,14 +340,17 @@ class _MainMenuPageState extends State<MainMenuPage> {
             padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
             height: MediaQuery.of(context).size.height * 0.6,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  'Usuario: ${jsonAlertParser!.getUsuario(index)}',
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
+                nombre == ''
+                    ? Text('Usuario: $nombre')
+                    : Text(
+                        'Usuario: $nombre ',
+                        textAlign: TextAlign.start,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                 const SizedBox(height: 10),
                 jsonAlertParser != null
                     ? Text(
@@ -358,6 +365,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
                 jsonAlertParser != null
                     ? Text(
                         'Ubicación: ${jsonAlertParser?.getUbicacion(index)}',
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,
                         ),
@@ -379,6 +387,29 @@ class _MainMenuPageState extends State<MainMenuPage> {
           );
         },
       );
+    }
+  }
+
+  getnames(String usuario) async {
+    try {
+      while (true) {
+        var theUrl =
+            Uri.https('wesafeoficial.000webhostapp.com', '/searchUsr.php');
+        var res = await http.post(theUrl, body: {
+          'usuario': '$usuario',
+        });
+        var responsBody = res.body;
+
+        nameParser = JsonParser(responsBody);
+        setState(() {
+          nombre = nameParser!.getNombre();
+          print(
+              'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $nombre');
+        });
+        return nombre;
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
