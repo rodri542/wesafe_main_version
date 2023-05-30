@@ -115,8 +115,6 @@ class _HistorialPageState extends State<HistorialPage> {
             children: [
               Expanded(
                 child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
                   padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -147,7 +145,9 @@ class _HistorialPageState extends State<HistorialPage> {
                             ),
                             child: Stack(
                               children: [
-                                Expanded(
+                                Container(
+                                  height: 460,
+                                  width: double.infinity,
                                   child: Container(
                                     padding: EdgeInsets.all(10),
                                     color: Colors.white,

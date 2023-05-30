@@ -108,15 +108,32 @@ class _DeleteAcountPageState extends State<DeleteAcountPage> {
                       child: ElevatedButton(
                         onPressed: () {
                           DBSaving();
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            Routes.loginPage,
-                            (_) => false,
-                          );
                           showDialog(
                             context: context,
-                            builder: (context) {
-                              return const Text('Cuenta eliminada');
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.white,
+                                title: const Text(
+                                  'Cuenta eliminada',
+                                  textAlign: TextAlign.center,
+                                ),
+                                content: const Text(
+                                  'Se eliminó la cuenta',
+                                  textAlign: TextAlign.center,
+                                ),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        Routes.loginPage,
+                                        (_) => false,
+                                      );
+                                    },
+                                    child: const Text('Ok'),
+                                  ),
+                                ],
+                              );
                             },
                           );
                         },

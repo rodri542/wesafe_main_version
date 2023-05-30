@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../json_user.dart';
+import '../../routes/routes.dart';
 
 class VerifyAccountPage extends StatefulWidget {
   const VerifyAccountPage({super.key, required this.getting});
@@ -143,7 +144,52 @@ class _VerifyAccountPageState extends State<VerifyAccountPage> {
                                   ? () {
                                       if (image != null) {
                                         DBSaving();
-                                        print('Guardado');
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              alignment: Alignment.center,
+                                              backgroundColor: Colors.white,
+                                              title: const Text(
+                                                'Verificación exitosa',
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              content: Container(
+                                                alignment: Alignment.center,
+                                                height: 40,
+                                                width: 40,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color:
+                                                      const Color(0xff511262),
+                                                ),
+                                                child: const Text(
+                                                  'Se verificó tu cuenta con exito',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                              actions: [
+                                                Center(
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator
+                                                          .pushNamedAndRemoveUntil(
+                                                        context,
+                                                        Routes.loginPage,
+                                                        (_) => false,
+                                                      );
+                                                    },
+                                                    child: const Text('Ok',
+                                                        style: TextStyle()),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
                                       }
                                     }
                                   : null,
