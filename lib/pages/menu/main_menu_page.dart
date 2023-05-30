@@ -30,7 +30,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
 
   final recorder = FlutterSoundRecorder();
   bool _isRecording = false;
-
+  int Verificado = 0;
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   LocationData? currentLocation;
   PermissionStatus? _permissionGranted;
@@ -43,6 +43,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
   int recordCount = 0;
   int recordCount2 = 0;
   bool cambio = false;
+  String? response;
 
   Future initRecorder() async {
     final status3 = await permission_handler.Permission.microphone.request();
@@ -60,7 +61,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
             Uri.https('wesafeoficial.000webhostapp.com', '/getAlertData.php');
         var res = await http.post(theUrl);
         var responsBody = res.body;
-        print('valido');
+        response = responsBody;
         jsonAlertParser = JsonAlertParser(responsBody);
         recordCount2 = jsonAlertParser!.getRecordCount();
 
@@ -120,6 +121,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
 
   void inicia() {
     jsonParser = JsonParser(widget.getting);
+    Verificado = jsonParser!.getVerificado();
   }
 
   @override
@@ -145,31 +147,54 @@ class _MainMenuPageState extends State<MainMenuPage> {
     return Scaffold(
       drawerEnableOpenDragGesture: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          border: Border.all(),
-          color: Color(0xff511262),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        margin: const EdgeInsets.all(10),
-        width: 180,
-        height: 70,
-        child: MaterialButton(
-          shape:
-              BeveledRectangleBorder(borderRadius: BorderRadius.circular(6.7)),
-          onPressed: () async {
-            //DBSaving();
-            await _captureImages();
-            await _startRecording();
-            print('se presiona');
-          },
-          child: const Icon(
-            color: Color.fromARGB(255, 249, 5, 5),
-            Icons.warning_amber,
-            size: 50,
-          ),
-        ),
-      ),
+      floatingActionButton: Verificado == 1
+          ? Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                color: Color(0xff511262),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              margin: const EdgeInsets.all(10),
+              width: 180,
+              height: 70,
+              child: MaterialButton(
+                shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(6.7)),
+                onPressed: () async {
+                  //DBSaving();
+                  await _captureImages();
+                  await _startRecording();
+                  print('se presiona');
+                },
+                child: const Icon(
+                  color: Color.fromARGB(255, 249, 5, 5),
+                  Icons.warning_amber,
+                  size: 50,
+                ),
+              ),
+            )
+          : Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                color: Color(0xff511262),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              margin: const EdgeInsets.all(10),
+              width: 190,
+              height: 70,
+              child: MaterialButton(
+                  shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.7)),
+                  onPressed: false ? () {} : null,
+                  child: const Text(
+                    'Debe verificar su cuenta para poder enviar alertas',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  )),
+            ),
       appBar: AppBar(
         elevation: 5,
         shadowColor: Colors.black,
@@ -226,6 +251,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
       ),
       drawer: LateralBar(
         getting: widget.getting,
+        jsonAlertParser: response,
       ),
     );
   }
@@ -359,7 +385,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
           Uri.https('wesafeoficial.000webhostapp.com', '/newAlert.php');
       var res = await http.post(theUrl, body: {
         'ubi': '$currentLocation',
-        'fecha': '${DateTime.now()} ',
+        'fecha': '${DateTime.now()}',
         'estado': '1',
         'usuario': '${jsonParser?.getUsuario()}',
         'imagenF': '$frontImageBytes2',

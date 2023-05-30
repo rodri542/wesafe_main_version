@@ -31,8 +31,8 @@ class _SingUpPageState extends State<SingUpPage> with LoginMixin {
       var theUrl = Uri.https('wesafeoficial.000webhostapp.com', '/singup.php');
       var res = await http.post(theUrl, body: {
         'nombre': '$_nombre',
-        'apellidomaterno': '$_apellidoPaterno',
-        'apellidopaterno': '$_apellidoMaterno',
+        'apellidomaterno': '$_apellidoMaterno',
+        'apellidopaterno': '$_apellidoPaterno',
         'numero': '$_phone',
         'genero': '$genero',
         'compleanos': '$_birthday',

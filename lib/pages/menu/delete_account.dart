@@ -1,15 +1,49 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import '../../json_user.dart';
+import '../../routes/routes.dart';
 
 class DeleteAcountPage extends StatefulWidget {
   const DeleteAcountPage({super.key, required this.getting});
-    final getting;
-
+  final getting;
 
   @override
   State<DeleteAcountPage> createState() => _DeleteAcountPageState();
 }
 
 class _DeleteAcountPageState extends State<DeleteAcountPage> {
+  JsonParser? jsonParser;
+
+  DBSaving() async {
+    print('${jsonParser?.getUsuario()}');
+    try {
+      var theUrl =
+          Uri.https('wesafeoficial.000webhostapp.com', '/deleteUsr.php');
+      var res = await http.post(theUrl, body: {
+        'usuario': '${jsonParser?.getUsuario()}',
+      });
+
+      var responsBody = json.decode(res.body);
+      print(res);
+      setState(() {});
+    } catch (e) {
+      print('Error ${e}');
+    }
+  }
+
+  void inicia() {
+    jsonParser = JsonParser(widget.getting);
+  }
+
+  @override
+  void initState() {
+    inicia();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,10 +107,18 @@ class _DeleteAcountPageState extends State<DeleteAcountPage> {
                       width: 300,
                       child: ElevatedButton(
                         onPressed: () {
-                         // showDialog(context: context, builder: (context) {
-                         //   return Text('Aceptado');
-                         // },);
-                          //Aqui se elimina la cuenta
+                          DBSaving();
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            Routes.loginPage,
+                            (_) => false,
+                          );
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const Text('Cuenta eliminada');
+                            },
+                          );
                         },
                         child: const Text(
                           'Sí, deseo eliminarla',

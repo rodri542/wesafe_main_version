@@ -1,12 +1,16 @@
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:wesafe_main_version/pages/login/widgets/profile_text_field.dart';
+import 'package:wesafe_main_version/routes/routes.dart';
 import '../../json_user.dart';
 import '../login/login_mixin.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.getting});
-    final getting;
-
+  final getting;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -25,30 +29,90 @@ class _ProfilePageState extends State<ProfilePage> with LoginMixin {
       _nombre = '',
       _gender = '',
       _age = '';
+  Uint8List? byteData;
+  Uint8List? imgPerfilData;
 
   JsonParser? jsonParser;
+  int Verificado = 0;
+  int ImgPerfilVerify = 0;
 
   void inicia() {
     jsonParser = JsonParser(widget.getting);
   }
 
+  DBSaving() async {
+    print('${jsonParser?.getUsuario()}');
+    try {
+      var theUrl =
+          Uri.https('wesafeoficial.000webhostapp.com', '/modifyUsr.php');
+      var res = await http.post(theUrl, body: {
+        'correo': '$_email',
+        'contrasenia': '$_password',
+        'telefono': '$_phone',
+        'usuario': '${jsonParser?.getUsuario()}',
+      });
+
+      var responsBody = json.decode(res.body);
+      print(res);
+      setState(() {});
+    } catch (e) {
+      print('Error ${e}');
+    }
+  }
+
+  imagenes(String? foto) {
+    print(foto);
+    if (foto != 'null') {
+      List<int> bytes = foto!
+          .replaceAll('[', '') // Eliminar el corchete de apertura
+          .replaceAll(']', '') // Eliminar el corchete de cierre
+          .split(', ') // Separar los valores por coma y espacio
+          .map<int>(
+              (value) => int.parse(value)) // Convertir cada valor a entero
+          .toList();
+
+      byteData = Uint8List.fromList(bytes);
+      Verificado = jsonParser!.getVerificado();
+    } else {
+      print('No hay fotos');
+    }
+  }
+
+  imagenesPerfil(String? foto) {
+    if (foto != 'null') {
+      List<int> bytes = foto!
+          .replaceAll('[', '') // Eliminar el corchete de apertura
+          .replaceAll(']', '') // Eliminar el corchete de cierre
+          .split(', ') // Separar los valores por coma y espacio
+          .map<int>(
+              (value) => int.parse(value)) // Convertir cada valor a entero
+          .toList();
+
+      imgPerfilData = Uint8List.fromList(bytes);
+      ImgPerfilVerify = 1;
+    } else {
+      print('no hay foto');
+    }
+  }
+
   void download() {
-    _email= jsonParser!.getCorreo();
-    _nombre= jsonParser!.getNombre();
-    _apellidoPaterno= jsonParser!.getApellidoPaterno();
-    _apellidoMaterno= jsonParser!.getApellidoMaterno();
-    _phone= jsonParser!.getTelefono();
-    _age= jsonParser!.getFechaNacimiento();
-    _gender= jsonParser!.getGenero();
+    _email = jsonParser!.getCorreo();
+    _nombre = jsonParser!.getNombre();
+    _apellidoPaterno = jsonParser!.getApellidoPaterno();
+    _apellidoMaterno = jsonParser!.getApellidoMaterno();
+    _phone = jsonParser!.getTelefono();
+    _age = jsonParser!.getFechaNacimiento();
+    _gender = jsonParser!.getGenero();
     _password = jsonParser!.getContrasena();
+    imagenes(jsonParser!.getIdentificacion());
+    imagenesPerfil(jsonParser!.getFotoPerfil());
   }
 
   @override
   void initState() {
     super.initState();
     inicia();
-        download();
-
+    download();
   }
 
   @override
@@ -83,8 +147,14 @@ class _ProfilePageState extends State<ProfilePage> with LoginMixin {
                     _emailM = _email;
                     _passwordM = _password;
                     _phoneM = _phone;
+                    ImgPerfilVerify = 0;
                   } else {
                     modifyactivate = false;
+                    setState(() {
+                      if (imgPerfilData != null) {
+                        ImgPerfilVerify = 1;
+                      }
+                    });
                   }
                 });
               },
@@ -110,29 +180,55 @@ class _ProfilePageState extends State<ProfilePage> with LoginMixin {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(
-                          width: 180,
-                        ),
-                        Container(
-                          color: Colors.grey,
-                          child: const Icon(
-                            Icons.add_a_photo,
-                            size: 100,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 40,
-                        ),
-                        Container(
-                          color: Colors.grey,
-                          child: const Icon(
-                            Icons.add_a_photo,
-                            size: 100,
-                          ),
-                        ),
+                        const SizedBox(width: 120),
+                        ImgPerfilVerify == 0
+                            ? Container(
+                                height: 110,
+                                width: 125,
+                                color: Colors.grey,
+                                child: IconButton(
+                                  onPressed: () async {
+                                    var result = await Navigator.pushNamed(
+                                        context, Routes.addProfileImage,
+                                        arguments: widget.getting);
+                                    setState(() {
+                                      imagenesPerfil(result.toString());
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.add_a_photo,
+                                    size: 100,
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                height: 100,
+                                width: 120,
+                                alignment: Alignment.center,
+                                child: Image.memory(imgPerfilData!,
+                                    fit: BoxFit.contain,
+                                    alignment: Alignment.center),
+                              ),
+                        const SizedBox(width: 20),
+                        Verificado == 1
+                            ? Container(
+                                height: 100,
+                                width: 120,
+                                alignment: Alignment.center,
+                                child: Image.memory(byteData!,
+                                    fit: BoxFit.contain,
+                                    alignment: Alignment.center),
+                              )
+                            : Container(
+                                color: Colors.grey,
+                                child: const Icon(
+                                  Icons.add_a_photo,
+                                  size: 100,
+                                ),
+                              ),
                       ],
                     ),
                   ),
@@ -279,21 +375,12 @@ class _ProfilePageState extends State<ProfilePage> with LoginMixin {
   }
 
   void _submit(BuildContext context) {
-    final formState = Form.of(context);
-
-    if (formState.validate()) {
-      setState(() {
-        modifyactivate = false;
-        _email = _emailM;
-        _password = _passwordM;
-        _phone = _phoneM;
-      });
-
-      print('valido');
-    } else {
+    setState(() {
       modifyactivate = false;
-
-      print('Invalido');
-    }
+      _email = _emailM;
+      _password = _passwordM;
+      _phone = _phoneM;
+      DBSaving();
+    });
   }
 }
